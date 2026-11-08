@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b3384a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="學測500">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>*,*::before,*::after{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>學測英文 500 單字</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: answer-sheet strip — sticky control bar, then a dense card grid; flashcard mode swaps grid for one large card */
+:root{
+  --paper:#f6f7f9; --card:#ffffff; --ink:#1c2433; --muted:#5d6676; --line:#dde1e8;
+  --accent:#b3384a; --accent-soft:#f6e3e6; --ok:#2f7d5b; --ok-soft:#e2f1ea;
+  --f-word:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#12161d; --card:#1a2029; --ink:#e7eaf0; --muted:#9aa3b2; --line:#2b333f;
+  --accent:#e2707f; --accent-soft:#3a2026; --ok:#5fc08f; --ok-soft:#18302a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12161d; --card:#1a2029; --ink:#e7eaf0; --muted:#9aa3b2; --line:#2b333f;
+  --accent:#e2707f; --accent-soft:#3a2026; --ok:#5fc08f; --ok-soft:#18302a; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:2px solid var(--accent);padding-bottom:14px}
+h1{font-family:var(--f-word);font-size:1.75rem;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 small{display:block;font-family:var(--f-body);font-size:.8rem;font-weight:500;color:var(--muted);letter-spacing:.06em;margin-top:2px}
+.progress{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+.bar{width:160px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);display:flex;flex-direction:column;gap:10px;padding-block:14px 12px;border-bottom:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+button{font:inherit;font-size:.85rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.on{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.spacer{flex:1}
+.note{font-size:.8rem;color:var(--muted);margin:12px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:16px}
+.w{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.w.known{background:var(--ok-soft);border-color:var(--ok)}
+.w .top{display:flex;align-items:baseline;gap:8px}
+.num{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:2.2em}
+.en{font-family:var(--f-word);font-weight:700;font-size:1.15rem;overflow-wrap:anywhere}
+.pos{font-family:var(--f-mono);font-size:.75rem;color:var(--accent)}
+.zh{font-weight:500}
+.col{font-family:var(--f-word);font-style:italic;font-size:.88rem;color:var(--muted)}
+.yr{font-family:var(--f-mono);font-size:.72rem;color:var(--accent);font-variant-numeric:tabular-nums}
+.hidezh .w:not(.peek) .zh{filter:blur(6px);user-select:none}
+.acts{display:flex;gap:6px;margin-top:6px}
+.acts button{padding:2px 10px;font-size:.78rem}
+.w.known .k{background:var(--ok);color:var(--card);border-color:var(--ok)}
+.flash{margin:28px auto 0;max-width:520px;display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.fc{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;padding:36px 24px;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;cursor:pointer}
+.fc .en{font-size:2.2rem}
+.fc .zh{font-size:1.3rem}
+.fc .meta{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.fnav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.fnav button{padding:8px 16px;font-size:.9rem}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+.qstat{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;font-family:var(--f-mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.qstat b{color:var(--ink);font-weight:500}
+.qc{min-height:170px;cursor:default}
+.qc .zh{font-size:1.6rem}
+.sent{font-family:var(--f-word);font-size:1.25rem;line-height:1.7;text-wrap:pretty;max-width:34ch}
+.blank{display:inline-block;min-width:5em;border-bottom:2px solid var(--accent)}
+.ans{color:var(--ok);font-weight:700;text-decoration-color:var(--ok);text-underline-offset:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:440px){.opts{grid-template-columns:1fr}}
+.opts button{border-radius:8px;padding:12px 14px;font-size:1rem;text-align:left;display:flex;gap:10px;align-items:baseline;min-width:0}
+.opts button .key{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.opts button .t{overflow-wrap:anywhere}
+.opts.e .t{font-family:var(--f-word);font-weight:700}
+.opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ink)}
+.opts button.wrong{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.opts button:disabled{cursor:default}
+.qfb{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:.92rem}
+.qfb .col{display:block;margin-top:2px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>學測英文 500 單字<small>DAILY REVIEW · 106–115 學年度 十年試題</small></h1>
+  <div class="progress"><span id="pt">今日已熟 0 / 500</span><div class="bar"><i id="pb"></i></div></div>
+</header>
+
+<div class="controls">
+  <div class="row" id="themes"></div>
+  <div class="row">
+    <button id="mSent" class="on">📖 句子題</button>
+    <button id="mQuiz">📝 字義題</button>
+    <button id="mList">📋 列表</button>
+    <button id="mFlash">🃏 字卡</button>
+    <button id="qDir">🔁 英→中</button>
+    <button id="qWrong">❌ 只練錯題</button>
+    <button id="tZh">🙈 遮中文</button>
+    <button id="tUnk">⏳ 只看未熟</button>
+    <button id="tShuf">🔀 打亂</button>
+    <span class="spacer"></span>
+    <button id="reset">↺ 重設今日</button>
+  </div>
+</div>
+<p class="note">每個字都實際出現在大考中心 106–115 學年度學測英文試卷（詞彙題、文意選填選項或閱讀測驗）。📅 標示出現的學年度，並依出現年度數分級。錯題本與「熟」只存在這台裝置，「熟」每天歸零。</p>
+
+<div id="quiz" class="flash">
+  <div class="qstat" id="qstat"></div>
+  <div class="fc qc" id="qq"></div>
+  <div class="opts" id="qo"></div>
+  <div class="qfb" id="qfb" hidden></div>
+  <div class="fnav"><button id="qNext">下一題 →</button><button id="qRe">↺ 重新計分</button></div>
+</div>
+<div id="list" class="grid" hidden></div>
+<div id="flash" class="flash" hidden>
+  <div class="fc" id="fc" tabindex="0"></div>
+  <div class="fnav">
+    <button id="fPrev">← 上一個</button>
+    <button id="fKnow">✅ 熟了</button>
+    <button id="fNext">下一個 →</button>
+  </div>
+</div>
+</div>
+
+<script>
+const THEMES=[["🔥","3–4 個年度"],["⭐","2 個年度"],["📝","詞彙題考過"],["📖","閱讀測驗"]];
+const RAW=`consumption|n.|攝取；消耗|sugar consumption|0|110,113,114,115
+occupy|v.|占據；使忙碌|be occupied with|0|106,108,109,110
+recognize|v.|認出；承認；表彰|be recognized as|0|108,110,111,113
+abandon|v.|拋棄；放棄|abandon a plan|0|107,110,115
+appoint|v.|任命；指派|be appointed (as)…|0|106,108,113
+associate|v.|聯想；有關聯|associate A with B|0|108,110,111
+credit|n./v.|功勞；信用；歸功於|give sb credit for|0|107,113,114
+establish|v.|建立|establish a system|0|106,109,115
+extraordinary|adj.|非凡的；驚人的|an extraordinary talent|0|106,113,115
+function|n./v.|功能；運作|function as|0|106,111,115
+install|v.|安裝；設置|install software|0|106,109,114
+popularity|n.|受歡迎；流行|gain popularity|0|110,112,113
+propose|v.|提議；求婚|propose that…|0|108,109,113
+reference|n.|參考；提及|make reference to|0|110,114,115
+replace|v.|取代|replace A with B|0|107,109,111
+reserve|v./n.|預訂；保留；儲備|reserve a table|0|106,107,109
+retain|v.|保留；保持|retain information|0|111,114,115
+symbol|n.|象徵|a symbol of peace|0|106,107,111
+trace|v./n.|追溯；痕跡|trace back to|0|106,107,112
+accommodate|v.|容納；提供住宿|accommodate guests|1|107,110
+achievement|n.|成就|a great achievement|1|106,115
+acquire|v.|獲得；習得|acquire a skill|1|106,107
+adapt|v.|適應；改編|adapt to|1|110,114
+adequate|adj.|足夠的；適當的|adequate sleep|1|107,109
+advantage|n.|優點；優勢|take advantage of|1|110,113
+alert|adj./v.|警覺的；警告|stay alert|1|110,112
+apparently|adv.|顯然；似乎|Apparently, …|1|110,113
+atmosphere|n.|大氣；氣氛|a relaxing atmosphere|1|113,115
+authority|n.|權威；當局|local authorities|1|106,110
+barely|adv.|幾乎不；勉強|can barely V|1|106,109
+career|n.|職業生涯|a career in medicine|1|111,115
+category|n.|類別；範疇|fall into a category|1|106,108
+cognitive|adj.|認知的|cognitive ability|1|106,110
+confirm|v.|證實；確認|confirm a reservation|1|107,113
+considerably|adv.|相當地；大大地|considerably higher|1|108,111
+construct|v.|建造；構成|construct a bridge|1|109,112
+contain|v.|包含；容納|contain sugar|1|107,113
+convention|n.|慣例；大會|social conventions|1|106,109
+cultural|adj.|文化的|cultural differences|1|106,112
+current|adj./n.|目前的；水流|current events|1|109,110
+decorate|v.|裝飾|decorate A with B|1|106,107
+defend|v.|防衛；為…辯護|defend oneself|1|106,115
+demanding|adj.|要求高的；費力的|a demanding job|1|107,110
+depart|v.|出發；離開|depart from|1|110,113
+draft|n./v.|草稿；起草|the first draft|1|106,114
+durable|adj.|耐用的；持久的|durable materials|1|108,113
+emerge|v.|出現；浮現|emerge from|1|112,113
+enclose|v.|圍住；隨函附上|enclose a check|1|106,112
+endangered|adj.|瀕臨絕種的|endangered animals|1|108,112
+enormous|adj.|巨大的|an enormous amount|1|111,114
+environmental|adj.|環境的|environmental protection|1|107,109
+expand|v.|擴大|expand the business|1|110,111
+expansion|n.|擴張；擴大|rapid expansion|1|110,115
+expedition|n.|遠征；探險|an expedition to|1|113,115
+expose|v.|暴露；揭露|be exposed to|1|109,112
+flash|n./v.|閃光；閃現|in a flash|1|107,113
+glare|v./n.|怒視；刺眼的光|glare at|1|109,114
+hazard|n.|危險；危害|a health hazard|1|111,114
+hollow|adj.|中空的|a hollow tree|1|107,112
+identity|n.|身分；認同|cultural identity|1|108,110
+illustration|n.|插圖；例證|by way of illustration|1|106,110
+impact|n./v.|影響；衝擊|have an impact on|1|111,115
+improve|v.|改善；進步|improve one's skills|1|107,113
+indicate|v.|顯示；指出|studies indicate that…|1|108,115
+influence|n./v.|影響|have influence on|1|106,111
+innovation|n.|創新|technological innovation|1|113,114
+interpret|v.|解釋；口譯|interpret A as B|1|107,108
+intersection|n.|十字路口；交會|at the intersection|1|112,114
+invention|n.|發明|a great invention|1|110,113
+liberal|adj.|開明的；大方的|liberal attitudes|1|107,108
+massive|adj.|巨大的；大量的|a massive amount of|1|107,110
+mission|n.|任務；使命|on a mission|1|108,109
+navigate|v.|導航；找路|navigate the streets|1|108,112
+observation|n.|觀察|careful observation|1|106,113
+operation|n.|手術；運作|undergo an operation|1|110,113
+patent|n.|專利|apply for a patent|1|113,114
+perspective|n.|觀點；角度|from a different perspective|1|114,115
+persuasive|adj.|有說服力的|a persuasive argument|1|107,110
+pesticide|n.|殺蟲劑；農藥|use pesticides|1|107,108
+preserve|v.|保存；維護|preserve wildlife|1|106,110
+pressure|n.|壓力|peer pressure|1|110,115
+privilege|n.|特權；榮幸|have the privilege of|1|108,112
+professional|adj./n.|專業的；專業人士|a professional athlete|1|108,111
+prompt|v./adj.|促使；迅速的|prompt sb to V|1|106,109
+provoke|v.|引起；激怒|provoke anger|1|109,112
+relieve|v.|減輕；緩和|relieve pain|1|107,109
+remote|adj.|偏遠的；遙遠的|a remote village|1|106,114
+resolve|v.|解決；下決心|resolve a conflict|1|110,112
+ritual|n.|儀式|a religious ritual|1|111,112
+settlement|n.|定居地；解決|a human settlement|1|112,115
+snap|v.|折斷；拍快照|snap a photo|1|111,112
+specialized|adj.|專門的|specialized knowledge|1|109,114
+status|n.|地位；狀態|social status|1|111,112
+suggest|v.|建議；顯示|suggest V-ing|1|111,115
+technique|n.|技術；技巧|advanced techniques|1|106,107
+transfer|v./n.|轉移；轉乘；調職|transfer to|1|109,111
+trial|n.|試驗；審判|a clinical trial|1|110,111
+tumble|v.|跌倒；暴跌|tumble down|1|110,115
+vacant|adj.|空著的；未被占用的|a vacant seat|1|106,114
+variety|n.|多樣；種類|a variety of|1|106,111
+venture|v./n.|冒險前往；冒險事業|venture into|1|106,112
+vessel|n.|船隻；容器；血管|a fishing vessel|1|109,115
+vigorous|adj.|激烈的；精力充沛的|vigorous exercise|1|109,110
+witness|v./n.|目擊；證人|witness an accident|1|111,112
+absolute|adj.|絕對的；完全的|absolute silence|2|111
+absurd|adj.|荒謬的|an absurd idea|2|110
+abundant|adj.|豐富的；充足的|abundant resources|2|109
+accelerate|v.|加速|accelerate growth|2|112
+access|n./v.|使用權；取得|have access to|2|106
+account|n./v.|帳戶；說明；占|account for|2|107
+adjustment|n.|調整；適應|make adjustments|2|110
+admire|v.|欽佩；欣賞|admire sb for|2|106
+advance|n./v.|進步；前進|in advance|2|111
+adventure|n.|冒險|an adventure story|2|106
+advise|v.|建議；勸告|advise sb to V|2|108
+agreeable|adj.|宜人的；欣然同意的|be agreeable to|2|111
+alternatively|adv.|或者；另一種選擇|Alternatively, …|2|115
+amateur|adj./n.|業餘的；業餘者|an amateur photographer|2|115
+amazed|adj.|驚訝的|be amazed at|2|109
+ancestor|n.|祖先|worship ancestors|2|112
+angle|n.|角度|from a different angle|2|107
+annual|adj.|一年一度的|an annual event|2|108
+anxiously|adv.|焦急地|wait anxiously|2|107
+appeal|v./n.|吸引；呼籲|appeal to|2|113
+appealing|adj.|吸引人的|an appealing offer|2|106
+applaud|v.|鼓掌；讚揚|applaud sb for|2|110
+approach|n./v.|方法；接近|a new approach to|2|113
+argue|v.|爭論；主張|argue that…|2|110
+ashamed|adj.|羞愧的|be ashamed of|2|106
+assistant|n.|助理|a teaching assistant|2|111
+available|adj.|可取得的；有空的|be available for|2|111
+aware|adj.|知道的；意識到的|be aware of|2|106
+balance|n./v.|平衡；餘額|keep one's balance|2|109
+bargain|n./v.|便宜貨；討價還價|a real bargain|2|107
+belief|n.|信念；相信|a strong belief|2|107
+benefit|n./v.|好處；受益|benefit from|2|108
+blank|adj./n.|空白的；空格|fill in the blank|2|112
+blossom|n./v.|花；開花|in full blossom|2|107
+border|n.|邊界；邊緣|cross the border|2|114
+brand|n.|品牌|a famous brand|2|114
+brutal|adj.|殘忍的；嚴酷的|a brutal attack|2|115
+bury|v.|埋葬；掩埋|be buried in|2|110
+calculate|v.|計算|calculate the cost|2|106
+cancel|v.|取消|cancel a flight|2|109
+casual|adj.|隨意的；非正式的|casual clothes|2|114
+cautious|adj.|謹慎的|be cautious about|2|110
+celebration|n.|慶祝；慶典|a birthday celebration|2|114
+circulate|v.|循環；流傳|circulate rumors|2|110
+circulation|n.|循環；發行量|blood circulation|2|113
+circumstance|n.|情況；環境|under no circumstances|2|108
+combat|v./n.|對抗；戰鬥|combat crime|2|112
+comment|n./v.|評論；意見|make a comment|2|107
+commit|v.|犯（罪）；致力|be committed to|2|110
+commuter|n.|通勤者|daily commuters|2|112
+compete|v.|競爭；比賽|compete with|2|107
+compulsory|adj.|義務的；強制的|compulsory education|2|113
+conclusion|n.|結論；結束|come to a conclusion|2|109
+condemn|v.|譴責|condemn violence|2|115
+conduct|v.|進行；實施|conduct an experiment|2|107
+consequently|adv.|因此|and consequently…|2|113
+contact|n./v.|聯絡；接觸|keep in contact|2|108
+container|n.|容器；貨櫃|a plastic container|2|114
+contribution|n.|貢獻；捐款|make a contribution to|2|111
+conventional|adj.|傳統的；慣例的|conventional methods|2|110
+convert|v.|轉換；改變|convert A into B|2|112
+convey|v.|傳達；運送|convey a message|2|108
+convince|v.|說服；使相信|convince sb to V|2|107
+correspond|v.|符合；通信|correspond to|2|110
+crash|n./v.|墜毀；撞擊；當機|a car crash|2|115
+creative|adj.|有創意的|creative thinking|2|109
+currently|adv.|目前|be currently V-ing|2|109
+decision|n.|決定|make a decision|2|107
+declare|v.|宣布；申報|declare war|2|108
+decrease|v./n.|減少|decrease by 10%|2|109
+definite|adj.|明確的；肯定的|a definite answer|2|107
+definition|n.|定義|by definition|2|109
+degree|n.|程度；度；學位|to some degree|2|107
+delay|v./n.|延誤；延遲|without delay|2|115
+deliver|v.|遞送；發表|deliver a speech|2|111
+deposit|n./v.|存款；押金；存放|pay a deposit|2|107
+diligent|adj.|勤奮的|a diligent student|2|115
+dimension|n.|面向；尺寸|a new dimension|2|115
+discipline|n./v.|紀律；學科|self-discipline|2|108
+distinctive|adj.|獨特的；有特色的|a distinctive smell|2|113
+distribute|v.|分發；分配|distribute A to B|2|107
+disturb|v.|打擾；擾亂|Do not disturb.|2|112
+drain|v./n.|排水；耗盡|drain away|2|114
+dramatic|adj.|戲劇性的；劇烈的|a dramatic change|2|115
+dump|v.|傾倒；丟棄|dump waste|2|107
+eager|adj.|渴望的|be eager to V|2|108
+effective|adj.|有效的|an effective method|2|112
+efficient|adj.|有效率的|an efficient way|2|107
+elementary|adj.|初級的；基本的|elementary school|2|115
+eliminate|v.|消除；淘汰|eliminate waste|2|106
+embarrassing|adj.|令人尷尬的|an embarrassing moment|2|106
+emphasis|n.|強調；重點|put emphasis on|2|115
+equip|v.|裝備；使具備|be equipped with|2|110
+erase|v.|擦掉；消除|erase the board|2|109
+escape|v./n.|逃脫；逃避|escape from|2|115
+evident|adj.|明顯的|it is evident that…|2|108
+evidently|adv.|明顯地|Evidently, …|2|107
+exceed|v.|超過|exceed the limit|2|110
+exception|n.|例外|with the exception of|2|107
+excessive|adj.|過度的|excessive use|2|114
+exclusive|adj.|獨有的；高級的|an exclusive interview|2|114
+exhibit|v./n.|展示；展覽品|exhibit paintings|2|109
+expectation|n.|期望|meet one's expectations|2|115
+explanation|n.|解釋；說明|give an explanation|2|110
+facility|n.|設施|sports facilities|2|108
+factor|n.|因素|a key factor|2|108
+fade|v.|褪色；逐漸消失|fade away|2|109
+faithful|adj.|忠實的|a faithful friend|2|114
+familiar|adj.|熟悉的|be familiar with|2|114
+fashion|n.|時尚；方式|in fashion|2|114
+favorable|adj.|有利的；贊同的|favorable conditions|2|110
+fertile|adj.|肥沃的|fertile soil|2|110
+flaw|n.|缺陷；瑕疵|a fatal flaw|2|109
+float|v.|漂浮|float on water|2|113
+flourish|v.|繁榮；茂盛|business flourishes|2|110
+fragile|adj.|易碎的；脆弱的|a fragile ecosystem|2|114
+fulfill|v.|實現；履行|fulfill a dream|2|107
+fundamentally|adv.|根本地|fundamentally different|2|115
+furious|adj.|狂怒的|be furious with|2|114
+generosity|n.|慷慨|thanks to sb's generosity|2|112
+genuinely|adv.|真誠地；真正地|genuinely interested|2|115
+gesture|n.|手勢；姿態|a friendly gesture|2|108
+gigantic|adj.|巨大的|a gigantic wave|2|114
+glimpse|n./v.|一瞥|catch a glimpse of|2|110
+grave|n./adj.|墳墓；嚴重的|a grave mistake|2|115
+guilty|adj.|有罪的；內疚的|feel guilty about|2|106
+halt|v./n.|停止|come to a halt|2|114
+hardship|n.|困苦；艱難|face hardship|2|107
+harmony|n.|和諧|live in harmony|2|109
+harsh|adj.|嚴厲的；惡劣的|harsh conditions|2|115
+humidity|n.|濕度|high humidity|2|113
+identical|adj.|完全相同的|identical twins|2|111
+identify|v.|辨識；確認|identify the problem|2|106
+immense|adj.|巨大的；極大的|immense pressure|2|109
+imply|v.|暗示；意味著|imply that…|2|107
+impose|v.|強加；課徵|impose A on B|2|106
+impress|v.|使印象深刻|be impressed by|2|107
+inferior|adj.|較差的；次等的|be inferior to|2|108
+initial|adj.|最初的|initial stage|2|108
+initially|adv.|起初|Initially, …|2|115
+insist|v.|堅持|insist on V-ing|2|108
+inspiration|n.|靈感；鼓舞|a source of inspiration|2|115
+instant|adj./n.|立即的；瞬間|instant noodles|2|115
+instructor|n.|教練；講師|a driving instructor|2|112
+instrument|n.|樂器；儀器|a musical instrument|2|110
+insurance|n.|保險|health insurance|2|109
+integrity|n.|正直；誠信|a person of integrity|2|112
+interaction|n.|互動|social interaction|2|110
+intimate|adj.|親密的|an intimate friend|2|111
+involve|v.|牽涉；包含|be involved in|2|108
+landmark|n.|地標|a famous landmark|2|108
+limitation|n.|限制；局限|know one's limitations|2|107
+magnificent|adj.|壯麗的|a magnificent view|2|109
+majestic|adj.|雄偉的|majestic mountains|2|109
+manual|adj./n.|手工的；手冊|a user manual|2|108
+manufacturer|n.|製造商|a car manufacturer|2|109
+margin|n.|邊緣；差距|by a narrow margin|2|107
+mature|adj./v.|成熟的；成熟|mature for one's age|2|107
+mechanism|n.|機制；機械裝置|a defense mechanism|2|113
+merely|adv.|僅僅|merely a dream|2|106
+milestone|n.|里程碑|an important milestone|2|109
+minimal|adj.|最低限度的|minimal effort|2|115
+moderate|adj.|適度的；中等的|moderate exercise|2|111
+modest|adj.|謙虛的；適度的|be modest about|2|110
+monitor|v./n.|監控；螢幕|monitor progress|2|107
+monument|n.|紀念碑|a historic monument|2|109
+multiple|adj.|多個的；多重的|multiple choice|2|114
+native|adj./n.|本地的；母語的|a native speaker|2|106
+necessity|n.|必需品；必要|a basic necessity|2|111
+noticeable|adj.|顯而易見的|a noticeable change|2|109
+objection|n.|反對|have no objection to|2|106
+objective|adj./n.|客觀的；目標|an objective view|2|108
+obvious|adj.|明顯的|an obvious reason|2|108
+occasional|adj.|偶爾的|an occasional visit|2|108
+offensive|adj.|冒犯的|offensive language|2|114
+oppose|v.|反對|be opposed to|2|110
+option|n.|選擇|have no option but to V|2|112
+original|adj./n.|原本的；原創的；原作|the original plan|2|109
+outcome|n.|結果|the final outcome|2|108
+overlook|v.|忽略；俯瞰|overlook a detail|2|109
+passion|n.|熱情；熱愛|a passion for|2|115
+penalty|n.|懲罰；罰款|a heavy penalty|2|107
+percentage|n.|百分比|a high percentage of|2|108
+perform|v.|表演；執行|perform on stage|2|108
+plot|n.|情節；陰謀|the plot of a movie|2|114
+politician|n.|政治人物|a local politician|2|111
+possess|v.|擁有|possess talent|2|114
+potentially|adv.|潛在地；可能地|potentially dangerous|2|111
+praise|v./n.|稱讚|praise sb for|2|114
+precisely|adv.|精確地；正是|at precisely 9:00|2|107
+predict|v.|預測|predict the future|2|108
+presence|n.|出席；存在|in the presence of|2|109
+principle|n.|原則；原理|in principle|2|107
+privacy|n.|隱私|invade one's privacy|2|108
+profit|n.|利潤|make a profit|2|106
+promising|adj.|有前途的|a promising young player|2|111
+proof|n.|證明|proof of identity|2|110
+provision|n.|提供；條款|the provision of|2|115
+purchase|v./n.|購買|make a purchase|2|108
+pursue|v.|追求；從事|pursue a career|2|106
+quest|n.|追求；探索|the quest for|2|111
+randomly|adv.|隨機地|be randomly chosen|2|113
+rare|adj.|稀有的；罕見的|a rare disease|2|109
+readily|adv.|容易地；樂意地|readily available|2|106
+realistic|adj.|實際的；逼真的|a realistic goal|2|113
+reasonable|adj.|合理的|a reasonable price|2|108
+recall|v.|回想起；召回|recall that…|2|112
+recover|v.|復原|recover from illness|2|107
+reflect|v.|反映；反射；反思|reflect on|2|106
+refugee|n.|難民|a refugee camp|2|109
+register|v.|登記；註冊|register for|2|106
+reinforce|v.|加強；強化|reinforce a wall|2|114
+relationship|n.|關係|a close relationship|2|109
+reliable|adj.|可靠的|a reliable source|2|107
+remarkable|adj.|非凡的；值得注意的|a remarkable recovery|2|111
+remedy|n.|療法；補救辦法|a home remedy|2|113
+requirement|n.|要求；必要條件|meet the requirements|2|107
+resource|n.|資源|natural resources|2|115
+restriction|n.|限制|impose restrictions on|2|108
+resume|v.|重新開始|resume work|2|110
+reveal|v.|揭露|reveal the truth|2|108
+revolutionary|adj.|革命性的|a revolutionary idea|2|110
+reward|n./v.|獎賞；報酬|as a reward|2|106
+risky|adj.|有風險的|a risky decision|2|111
+route|n.|路線|the shortest route|2|111
+routine|n./adj.|例行公事；日常的|a daily routine|2|115
+ruin|v./n.|毀壞；廢墟|ruin one's plans|2|108
+scatter|v.|散布；撒|be scattered around|2|110
+sculpture|n.|雕塑|a bronze sculpture|2|106
+seasonal|adj.|季節性的|seasonal fruit|2|107
+sensation|n.|感覺；轟動|cause a sensation|2|111
+shatter|v.|粉碎|shatter into pieces|2|115
+sibling|n.|兄弟姊妹|have two siblings|2|112
+signal|n./v.|信號；示意|send a signal|2|106
+slight|adj.|輕微的|a slight cold|2|113
+slippery|adj.|滑的|a slippery floor|2|113
+solid|adj.|固體的；堅固的|a solid foundation|2|109
+souvenir|n.|紀念品|buy souvenirs|2|109
+spare|adj./v.|空閒的；備用的；騰出|spare time|2|110
+spiritual|adj.|精神的；心靈的|spiritual life|2|106
+stress|n.|壓力|under stress|2|115
+stubborn|adj.|頑固的|as stubborn as a mule|2|114
+stumble|v.|絆倒；結巴|stumble over|2|108
+survive|v.|存活|survive the winter|2|114
+suspicious|adj.|可疑的；懷疑的|be suspicious of|2|107
+swift|adj.|迅速的|a swift response|2|115
+thoroughly|adv.|徹底地|thoroughly clean|2|110
+transform|v.|轉變|transform into|2|109
+transport|n./v.|運輸|public transport|2|110
+trend|n.|趨勢；潮流|a growing trend|2|114
+ultimate|adj.|最終的；極致的|the ultimate goal|2|111
+undoubtedly|adv.|無疑地|Undoubtedly, …|2|112
+urge|v./n.|力勸；衝動|urge sb to V|2|106
+vacancy|n.|空缺；空房|job vacancies|2|115
+vanish|v.|消失|vanish into thin air|2|107
+violent|adj.|暴力的；猛烈的|violent crime|2|108
+visible|adj.|看得見的|be visible to|2|111
+vividly|adv.|生動地；鮮明地|vividly remember|2|108
+wander|v.|閒逛；徘徊|wander around|2|115
+accessible|adj.|可進入的；易取得的|be accessible to|3|110
+accomplish|v.|完成；達成|accomplish a goal|3|110
+accumulate|v.|累積|accumulate wealth|3|112
+admission|n.|入場；入學許可|free admission|3|110
+advancement|n.|進步；晉升|technological advancement|3|115
+affordable|adj.|負擔得起的|affordable housing|3|111
+ambitious|adj.|有雄心的|an ambitious plan|3|113
+ample|adj.|充足的|ample time|3|115
+anxiety|n.|焦慮|reduce anxiety|3|114
+approximately|adv.|大約|approximately 30%|3|106
+architecture|n.|建築|modern architecture|3|115
+attractive|adj.|有吸引力的|an attractive offer|3|107
+awareness|n.|意識；認識|raise awareness of|3|112
+boost|v./n.|提升；促進|boost the economy|3|113
+breakthrough|n.|突破|a medical breakthrough|3|114
+capability|n.|能力|beyond one's capability|3|108
+ceremony|n.|典禮；儀式|a graduation ceremony|3|107
+challenge|n./v.|挑戰|face a challenge|3|113
+civilization|n.|文明|ancient civilizations|3|115
+commerce|n.|商業；貿易|e-commerce|3|112
+competition|n.|競爭；比賽|fierce competition|3|110
+complexity|n.|複雜性|the complexity of|3|111
+concentrate|v.|專心；集中|concentrate on|3|107
+consist|v.|由…組成|consist of|3|109
+construction|n.|建造；建設|under construction|3|107
+consume|v.|消耗；消費|consume energy|3|106
+contract|n.|合約|sign a contract|3|107
+convenience|n.|方便|at your convenience|3|109
+cope|v.|應付；處理|cope with|3|108
+courage|n.|勇氣|have the courage to V|3|115
+critic|n.|評論家；批評者|a film critic|3|113
+critical|adj.|關鍵的；批判的|critical thinking|3|107
+crucial|adj.|關鍵的|play a crucial role|3|109
+dedicated|adj.|專注的；奉獻的|be dedicated to|3|110
+depict|v.|描繪|depict A as B|3|108
+derive|v.|源自；獲得|derive from|3|109
+destination|n.|目的地|a tourist destination|3|112
+detect|v.|偵測；察覺|detect changes|3|108
+devastate|v.|摧毀；使震驚|be devastated by|3|109
+device|n.|裝置|a wearable device|3|113
+distinction|n.|區別；卓越|make a distinction between|3|109
+distinguish|v.|區別；辨別|distinguish A from B|3|106
+dynamic|adj.|充滿活力的；動態的|a dynamic city|3|115
+ecosystem|n.|生態系|the marine ecosystem|3|109
+efficiency|n.|效率|energy efficiency|3|113
+emergence|n.|出現；興起|the emergence of|3|114
+emergency|n.|緊急情況|in case of emergency|3|107
+empathy|n.|同理心|show empathy|3|106
+encounter|v./n.|遭遇|encounter difficulties|3|115
+engineer|n.|工程師|a software engineer|3|113
+enrich|v.|使豐富|enrich one's life|3|106
+enthusiastic|adj.|熱衷的|be enthusiastic about|3|110
+evidence|n.|證據|scientific evidence|3|115
+examine|v.|檢查；仔細研究|examine carefully|3|113
+excel|v.|擅長；勝過|excel at/in|3|106
+exhibition|n.|展覽|an art exhibition|3|106
+exploration|n.|探索|space exploration|3|115
+exposure|n.|暴露；接觸|exposure to sunlight|3|108
+extensive|adj.|廣泛的；大量的|extensive research|3|113
+feature|n./v.|特色；以…為特色|a key feature|3|115
+fossil|n.|化石|fossil fuels|3|110
+fundamental|adj.|基本的；根本的|fundamental rights|3|113
+global|adj.|全球的|global warming|3|111
+government|n.|政府|the central government|3|107
+habitat|n.|棲息地|natural habitat|3|112
+hazardous|adj.|危險的；有害的|hazardous waste|3|109
+heritage|n.|遺產|cultural heritage|3|115
+hinder|v.|妨礙|hinder progress|3|115
+imagination|n.|想像力|use one's imagination|3|113
+implement|v.|實施；執行|implement a policy|3|107
+independence|n.|獨立|gain independence|3|106
+individual|n./adj.|個人；個別的|individual needs|3|107
+industrial|adj.|工業的|the Industrial Revolution|3|114
+inevitably|adv.|不可避免地|inevitably lead to|3|112
+infection|n.|感染|a viral infection|3|107
+initiative|n.|主動；倡議|take the initiative|3|112
+injury|n.|受傷|a serious injury|3|109
+institution|n.|機構；制度|financial institutions|3|106
+intelligence|n.|智力；智慧|emotional intelligence|3|106
+landscape|n.|風景；景觀|a beautiful landscape|3|113
+legendary|adj.|傳奇的|a legendary hero|3|115
+mandatory|adj.|強制的；必須的|mandatory for|3|111
+marine|adj.|海洋的|marine life|3|113
+minimum|n./adj.|最低限度|a minimum of|3|110
+negotiate|v.|談判；協商|negotiate with|3|112
+neutral|adj.|中立的|remain neutral|3|108
+occupation|n.|職業；占領|What's your occupation?|3|108
+organize|v.|組織；籌辦|organize an event|3|110
+outbreak|n.|爆發|an outbreak of|3|107
+perceive|v.|察覺；視為|perceive A as B|3|109
+permanent|adj.|永久的|a permanent job|3|112
+permit|v./n.|允許；許可證|permit sb to V|3|110
+perseverance|n.|毅力|with perseverance|3|115
+phenomenon|n.|現象|a natural phenomenon|3|108
+population|n.|人口|an aging population|3|112
+precaution|n.|預防措施|take precautions|3|112
+prevent|v.|預防|prevent A from V-ing|3|114
+prominent|adj.|著名的；突出的|a prominent figure|3|115
+proposal|n.|提議；求婚|accept a proposal|3|107
+prosperous|adj.|繁榮的|a prosperous city|3|112
+recognition|n.|認出；認可|gain recognition|3|106
+reluctant|adj.|不情願的|be reluctant to V|3|112
+renewable|adj.|可再生的|renewable energy|3|110
+represent|v.|代表；象徵|represent one's country|3|112
+resemble|v.|相似；像|closely resemble|3|114
+resident|n.|居民|local residents|3|107
+resist|v.|抵抗；忍住|resist temptation|3|111
+responsible|adj.|負責的|be responsible for|3|109
+restore|v.|恢復；修復|restore power|3|111
+revenue|n.|收入；稅收|tax revenue|3|114
+sacred|adj.|神聖的|a sacred place|3|110
+security|n.|安全；保全|national security|3|107
+sensitive|adj.|敏感的；體貼的|be sensitive to|3|114
+severity|n.|嚴重性|the severity of|3|107
+specific|adj.|特定的；明確的|specific details|3|108
+strategy|n.|策略|a learning strategy|3|108
+structure|n.|結構；建築物|sentence structure|3|111
+subsequently|adv.|隨後|subsequently become|3|109
+substance|n.|物質|harmful substances|3|108
+sufficient|adj.|足夠的|sufficient sleep|3|107
+suppress|v.|壓抑；鎮壓|suppress one's anger|3|111
+survey|n./v.|調查|conduct a survey|3|113
+suspend|v.|暫停；懸掛|be suspended from|3|109
+symptom|n.|症狀|common symptoms|3|107
+technology|n.|科技|modern technology|3|113
+territory|n.|領土；領域|enemy territory|3|113
+theory|n.|理論|in theory|3|111
+toxic|adj.|有毒的|toxic chemicals|3|108
+tradition|n.|傳統|a family tradition|3|111
+transparent|adj.|透明的|transparent glass|3|111
+trigger|v./n.|引發；觸發|trigger an allergy|3|108
+universal|adj.|普遍的；全世界的|a universal language|3|106
+utilize|v.|利用|utilize resources|3|110
+variation|n.|變化；差異|seasonal variation|3|114
+viable|adj.|可行的|a viable option|3|107
+vibrant|adj.|充滿活力的；鮮豔的|vibrant colors|3|108
+vital|adj.|極重要的|vital organs|3|115`;
+const SENT=`Doctors advise cutting down sugar [consumption] to protect your teeth.|醫生建議減少糖分攝取以保護牙齒。
+Smartphones now [occupy] much of teenagers' free time.|智慧型手機現在占據青少年大部分的空閒時間。
+I didn't [recognize] her at first because of her new haircut.|她剪了新髮型，我一開始沒認出她。
+The kitten was [abandoned] on the side of the road.|小貓被遺棄在路邊。
+She was [appointed] head of the research team.|她被任命為研究團隊的負責人。
+Many people [associate] the color red with good luck.|許多人把紅色和好運聯想在一起。
+The coach gave the players full [credit] for the victory.|教練把勝利的功勞全歸給球員。
+The school was [established] in 1950.|這所學校創立於1950年。
+The young pianist has an [extraordinary] talent for music.|這位年輕鋼琴家有非凡的音樂天分。
+The heart's main [function] is to pump blood through the body.|心臟的主要功能是將血液送往全身。
+The school [installed] solar panels on the roof.|學校在屋頂安裝了太陽能板。
+Bubble tea has gained [popularity] all over the world.|珍珠奶茶在全世界越來越受歡迎。
+The mayor [proposed] building a new park downtown.|市長提議在市中心興建新公園。
+The dictionary is a useful [reference] for students.|字典對學生是實用的參考工具。
+Robots may [replace] humans in some dangerous jobs.|機器人可能在某些危險工作上取代人類。
+We [reserved] a table for six at the restaurant.|我們在餐廳預訂了六人桌。
+Some old towns still [retain] their traditional charm.|有些老城鎮仍保有傳統風情。
+The dove is often seen as a [symbol] of peace.|鴿子常被視為和平的象徵。
+The history of the town can be [traced] back to the 17th century.|這個小鎮的歷史可追溯到十七世紀。
+The new stadium can [accommodate] 40,000 fans.|新體育場可容納四萬名球迷。
+Winning the gold medal was the greatest [achievement] of her life.|贏得金牌是她一生最大的成就。
+Children [acquire] language skills quickly at a young age.|孩子在年幼時很快就能習得語言能力。
+It took her a few months to [adapt] to life in Canada.|她花了幾個月才適應加拿大的生活。
+Without [adequate] rest, your body cannot recover.|沒有足夠的休息，身體就無法恢復。
+One [advantage] of living in the city is easy access to public transport.|住在都市的優點之一是大眾運輸便利。
+Drivers must stay [alert] on long night trips.|長途夜間開車時駕駛必須保持警覺。
+[Apparently], the meeting has been put off until next week.|看來會議已延到下週。
+The café has a warm and relaxing [atmosphere].|這家咖啡店氣氛溫馨又放鬆。
+Local [authorities] closed the beach because of the storm.|當地政府因暴風雨關閉了海灘。
+I was so tired that I could [barely] keep my eyes open.|我累到幾乎睜不開眼睛。
+She decided to pursue a [career] in medicine.|她決定投入醫學職涯。
+The books are arranged by [category] in the library.|圖書館裡的書依類別排列。
+Playing chess may improve children's [cognitive] skills.|下棋可能提升兒童的認知能力。
+Please call the hotel to [confirm] your booking.|請打電話給飯店確認訂房。
+Prices in Taipei are [considerably] higher than in small towns.|台北的物價比小鎮高出許多。
+It took ten years to [construct] the tunnel through the mountain.|花了十年才建好這條穿山隧道。
+This drink [contains] a lot of sugar.|這種飲料含有大量糖分。
+Shaking hands is a common social [convention] in many countries.|握手在許多國家是常見的社交慣例。
+Studying abroad helps students understand [cultural] differences.|出國讀書幫助學生理解文化差異。
+Strong ocean [currents] make swimming here dangerous.|強勁的海流讓在這裡游泳很危險。
+Children [decorated] the classroom with paper lanterns.|孩子們用紙燈籠裝飾教室。
+The lawyer worked hard to [defend] her client in court.|律師在法庭上努力為委託人辯護。
+Nursing is a [demanding] job that requires patience and energy.|護理是需要耐心與體力的吃重工作。
+The flight to Tokyo will [depart] at 8:30 a.m.|飛往東京的班機將於上午八點半起飛。
+Please send me the first [draft] of your essay by Monday.|請在週一前把文章初稿寄給我。
+These hiking boots are made of [durable] leather.|這雙登山鞋以耐用的皮革製成。
+A new leader [emerged] after the election.|選舉後出現了一位新領袖。
+The garden is [enclosed] by a high stone wall.|花園被一道高石牆圍住。
+The Formosan clouded leopard was once an [endangered] animal in Taiwan.|台灣雲豹曾是台灣的瀕危動物。
+The blue whale is an [enormous] animal, longer than a bus.|藍鯨是比公車還長的巨大動物。
+Plastic waste is a serious [environmental] problem.|塑膠垃圾是嚴重的環境問題。
+The company plans to [expand] its business into Southeast Asia.|公司計畫把業務擴展到東南亞。
+The rapid [expansion] of cities threatens farmland.|城市快速擴張威脅到農地。
+The team set out on an [expedition] to the South Pole.|團隊出發前往南極探險。
+Children should not be [exposed] to too much screen time.|兒童不應接觸過多螢幕時間。
+A [flash] of lightning lit up the dark sky.|一道閃電照亮了漆黑的天空。
+The angry driver [glared] at the boy who crossed the road.|生氣的司機怒瞪那個穿越馬路的男孩。
+Smoking is a serious health [hazard].|吸菸是嚴重的健康危害。
+The owl made its nest in a [hollow] tree trunk.|貓頭鷹在中空的樹幹裡築巢。
+Language is an important part of a group's cultural [identity].|語言是族群文化認同的重要部分。
+The children's book is full of colorful [illustrations].|這本童書有滿滿的彩色插圖。
+Social media has a huge [impact] on how young people see themselves.|社群媒體對年輕人如何看待自己有巨大影響。
+Reading every day will [improve] your vocabulary.|每天閱讀會增進你的字彙量。
+Recent studies [indicate] that teenagers need more sleep than adults.|近期研究顯示青少年比成人需要更多睡眠。
+Parents have a strong [influence] on their children's values.|父母對孩子的價值觀有很大影響。
+The smartphone is one of the greatest technological [innovations] of our time.|智慧型手機是當代最偉大的科技創新之一。
+Different readers may [interpret] the poem in different ways.|不同讀者可能用不同方式詮釋這首詩。
+Turn left at the next [intersection].|在下一個路口左轉。
+The printing press was one of the most important [inventions] in history.|印刷機是史上最重要的發明之一。
+The school has a [liberal] policy on hairstyles.|這所學校對髮型的規定很開明。
+The storm caused [massive] damage to the coastal towns.|暴風雨對沿海城鎮造成巨大損害。
+The astronauts completed their [mission] and returned safely.|太空人完成任務並平安返回。
+Sea turtles use the Earth's magnetic field to [navigate].|海龜利用地球磁場導航。
+Her [observations] of chimpanzees changed how we see animals.|她對黑猩猩的觀察改變了我們看待動物的方式。
+My grandfather had an [operation] on his heart last year.|我爺爺去年動了心臟手術。
+The inventor applied for a [patent] on his new design.|發明家為他的新設計申請專利。
+Traveling helps you see things from a new [perspective].|旅行幫助你用新的角度看事情。
+Her speech was so [persuasive] that everyone agreed with her.|她的演講很有說服力，大家都同意她。
+Organic farmers grow vegetables without chemical [pesticides].|有機農夫種菜不使用化學農藥。
+The old temple has been carefully [preserved] for over three hundred years.|這座古廟三百多年來被細心保存。
+Many students feel great [pressure] from their parents.|許多學生感受到來自父母的巨大壓力。
+It was a great [privilege] to meet the famous scientist.|能見到那位知名科學家是莫大的榮幸。
+You should get advice from a [professional] before investing.|投資前你應該向專業人士諮詢。
+The rising cost of living [prompted] many young people to leave the city.|生活成本上升促使許多年輕人離開城市。
+The new tax [provoked] strong reactions from the public.|新稅制引起民眾強烈反彈。
+This medicine can help [relieve] the pain in your back.|這種藥能幫助減輕你的背痛。
+Doctors travel to [remote] mountain villages to treat patients.|醫生到偏遠山村為病人看診。
+The two sides met to [resolve] their differences.|雙方會面以解決彼此的歧見。
+Lighting incense at the temple is a common religious [ritual].|在廟裡點香是常見的宗教儀式。
+Archaeologists found the remains of an ancient [settlement].|考古學家發現一處古代聚落的遺跡。
+Tourists [snapped] photos of the sunrise at Alishan.|遊客在阿里山拍下日出的照片。
+This job requires [specialized] training in computer science.|這份工作需要資訊科學的專門訓練。
+In the past, owning a car was a symbol of social [status].|過去擁有汽車是社會地位的象徵。
+Research [suggests] that music can reduce stress.|研究顯示音樂能減輕壓力。
+The chef learned traditional cooking [techniques] from his grandmother.|這位主廚向祖母學習傳統烹飪技巧。
+You need to [transfer] to another train at Taipei Main Station.|你需要在台北車站轉乘另一班車。
+The new vaccine is still in clinical [trials].|新疫苗仍在臨床試驗中。
+The boy lost his balance and [tumbled] down the stairs.|男孩失去平衡，從樓梯上摔了下來。
+There were no [vacant] seats left on the train.|火車上已經沒有空位了。
+The night market offers a wide [variety] of snacks.|夜市提供各式各樣的小吃。
+Few people dare to [venture] into the dark forest at night.|很少人敢在夜裡冒險進入黑暗的森林。
+A fishing [vessel] was rescued near Penghu after the storm.|暴風雨後一艘漁船在澎湖附近獲救。
+Doctors recommend at least 20 minutes of [vigorous] exercise.|醫生建議至少二十分鐘的劇烈運動。
+Several people [witnessed] the car accident.|好幾個人目擊了那場車禍。
+The library was in [absolute] silence during the exam week.|考試週圖書館裡一片寂靜。
+It is [absurd] to think that money can buy happiness.|認為金錢能買到快樂是很荒謬的。
+Taiwan has [abundant] rainfall in summer.|台灣夏季雨量豐沛。
+Climate change is [accelerating] the melting of glaciers.|氣候變遷正加速冰河融化。
+All students have free [access] to the school library.|所有學生都能免費使用學校圖書館。
+Tourism [accounts] for a large part of the island's income.|觀光占這座島收入的一大部分。
+After a few small [adjustments], the machine worked perfectly.|經過幾次小調整後，機器運作得很完美。
+I really [admire] my teacher for her patience.|我非常欽佩老師的耐心。
+Please book your tickets in [advance].|請提前訂票。
+Traveling alone in Africa was the greatest [adventure] of his life.|獨自在非洲旅行是他一生最大的冒險。
+The doctor [advised] him to stop smoking.|醫生勸他戒菸。
+The weather in spring is mild and [agreeable].|春天的天氣溫和宜人。
+You can take the bus. [Alternatively], you can ride a YouBike.|你可以搭公車，或者騎 YouBike。
+He is an [amateur] photographer who takes pictures on weekends.|他是週末拍照的業餘攝影師。
+We were [amazed] at how quickly the city was rebuilt.|我們對城市重建的速度感到驚訝。
+Many families honor their [ancestors] during Tomb Sweeping Day.|許多家庭在清明節祭拜祖先。
+Try looking at the problem from a different [angle].|試著從不同角度看這個問題。
+The film festival is an [annual] event held every autumn.|這個影展是每年秋天舉辦的年度盛事。
+The parents waited [anxiously] outside the operating room.|父母在手術室外焦急地等待。
+The new game [appeals] to both children and adults.|這款新遊戲同時吸引孩子和大人。
+The idea of working from home is [appealing] to many people.|在家工作的想法對許多人很有吸引力。
+The audience stood up and [applauded] the performers.|觀眾起立為表演者鼓掌。
+The teacher tried a new [approach] to teaching grammar.|老師嘗試用新方法教文法。
+Some experts [argue] that homework should be banned.|有些專家主張應該廢除家庭作業。
+He was [ashamed] of lying to his best friend.|他對欺騙好友感到羞愧。
+My [assistant] will send you the details by email.|我的助理會用電子郵件寄細節給你。
+Free Wi-Fi is [available] in all MRT stations.|所有捷運站都提供免費 Wi-Fi。
+Are you [aware] of the risks of using public Wi-Fi?|你知道使用公共 Wi-Fi 的風險嗎？
+It is important to find a [balance] between study and rest.|在讀書與休息之間取得平衡很重要。
+At half price, this jacket is a real [bargain].|半價的這件外套真是撿到便宜。
+It is a common [belief] that breakfast is the most important meal.|普遍相信早餐是最重要的一餐。
+Everyone can [benefit] from a good night's sleep.|每個人都能從一夜好眠中受益。
+Write your answer in the [blank] space.|把答案寫在空白處。
+The cherry trees are in full [blossom] in March.|櫻花樹在三月盛開。
+Thousands of refugees crossed the [border] to escape the war.|數千名難民越過邊界逃離戰爭。
+Many teenagers like to buy famous [brands] of sneakers.|許多青少年喜歡買名牌球鞋。
+The [brutal] war left millions of people homeless.|殘酷的戰爭讓數百萬人無家可歸。
+Dogs often [bury] bones in the garden.|狗常把骨頭埋在花園裡。
+Use this app to [calculate] how many calories you burn.|用這個 App 計算你燃燒了多少卡路里。
+All flights were [canceled] because of the typhoon.|所有航班因颱風取消。
+You can wear [casual] clothes to the party.|你可以穿便服去派對。
+Be [cautious] when you share personal information online.|在網路上分享個人資訊時要謹慎。
+The whole town joined in the New Year [celebration].|全鎮的人都參加了新年慶祝活動。
+Fake news [circulates] quickly on social media.|假新聞在社群媒體上迅速流傳。
+Walking every day helps improve blood [circulation].|每天走路有助改善血液循環。
+Under no [circumstances] should you open the door to strangers.|無論如何都不可以為陌生人開門。
+The government is taking steps to [combat] air pollution.|政府正採取措施對抗空氣汙染。
+The singer read fans' [comments] on her new song.|歌手閱讀粉絲對她新歌的評論。
+The company is [committed] to reducing plastic waste.|公司致力於減少塑膠廢棄物。
+The MRT is crowded with [commuters] during rush hour.|尖峰時段捷運擠滿通勤族。
+Small shops find it hard to [compete] with big supermarkets.|小商店難以和大型超市競爭。
+Taiwan provides twelve years of basic education, and the first nine are [compulsory].|台灣提供十二年基本教育，前九年為義務教育。
+After a long discussion, we came to the [conclusion] that the plan was too costly.|經過長時間討論，我們得出計畫成本太高的結論。
+World leaders [condemned] the attack on innocent people.|各國領袖譴責對無辜民眾的攻擊。
+The team plans to [conduct] an experiment on sleep and memory next month.|團隊計畫下個月進行一項關於睡眠與記憶的實驗。
+He didn't study at all; [consequently], he failed the test.|他完全沒讀書，因此考試不及格。
+Please [contact] us if you have any questions.|若有任何問題請與我們聯絡。
+Bring your own [container] when you buy takeout food.|買外帶時請自備容器。
+She was honored for her [contribution] to children's education.|她因對兒童教育的貢獻而獲表揚。
+Electric cars are quieter than [conventional] cars.|電動車比傳統汽車安靜。
+Solar panels [convert] sunlight into electricity.|太陽能板把陽光轉換成電力。
+Music can [convey] feelings that words cannot express.|音樂能傳達言語無法表達的情感。
+It took me an hour to [convince] my parents to let me go.|我花了一小時才說服爸媽讓我去。
+The results did not [correspond] to what we expected.|結果和我們預期的不符。
+Nobody was hurt in the car [crash].|車禍中沒有人受傷。
+The contest encourages students to come up with [creative] ideas.|這項比賽鼓勵學生提出有創意的點子。
+The museum is [currently] closed for repairs.|博物館目前因整修而關閉。
+Choosing a university is an important [decision].|選擇大學是重要的決定。
+The government [declared] a state of emergency after the earthquake.|地震後政府宣布進入緊急狀態。
+The number of smokers has [decreased] by 20% over the past ten years.|過去十年吸菸人數減少了兩成。
+We need a [definite] answer by Friday.|我們需要在週五前得到明確答覆。
+Look up the [definition] of the word in a dictionary.|在字典裡查這個字的定義。
+The temperature dropped to five [degrees] last night.|昨晚氣溫降到五度。
+The train was [delayed] for half an hour because of heavy rain.|火車因大雨延誤半小時。
+The package will be [delivered] to your door tomorrow.|包裹明天會送到你家門口。
+You need to pay a [deposit] before renting the apartment.|租公寓前需要先付押金。
+Thanks to her [diligent] work, she passed the exam with high marks.|多虧她勤奮努力，她以高分通過考試。
+Travel adds a new [dimension] to learning.|旅行為學習增添了新的面向。
+Learning a musical instrument requires a lot of [discipline].|學樂器需要很強的紀律。
+Stinky tofu has a very [distinctive] smell.|臭豆腐有非常獨特的氣味。
+Volunteers [distributed] food to people affected by the flood.|志工把食物分發給受水災影響的民眾。
+Please don't [disturb] your brother while he is studying.|你哥哥讀書時請不要打擾他。
+Playing games all night [drained] his energy.|整夜打電動耗盡了他的體力。
+There has been a [dramatic] increase in online shopping.|網購出現了劇烈的成長。
+Some factories illegally [dump] waste into rivers.|有些工廠非法把廢棄物倒入河中。
+The students were [eager] to start their summer vacation.|學生們迫不及待要開始放暑假。
+Regular practice is the most [effective] way to improve your English.|規律練習是提升英文最有效的方法。
+Taking the MRT is an [efficient] way to get around Taipei.|搭捷運是在台北移動很有效率的方式。
+My little sister goes to an [elementary] school near our home.|我妹妹讀家附近的國小。
+The team was [eliminated] in the first round of the tournament.|這支隊伍在錦標賽第一輪就被淘汰。
+Falling on stage was the most [embarrassing] moment of my life.|在台上跌倒是我人生最尷尬的時刻。
+Our school puts great [emphasis] on reading.|我們學校非常重視閱讀。
+All classrooms are [equipped] with air conditioners.|所有教室都配有冷氣。
+She [erased] the wrong answer and wrote a new one.|她擦掉錯的答案重寫一個。
+Two prisoners [escaped] from the jail last night.|昨晚兩名犯人越獄。
+It was [evident] from his face that he was very tired.|從他的臉上明顯看得出他非常疲累。
+[Evidently], nobody had cleaned the room for weeks.|顯然好幾週沒人打掃這個房間了。
+Drivers who [exceed] the speed limit will be fined.|超速的駕駛將被罰款。
+Everyone passed the test with the [exception] of Tom.|除了湯姆之外，大家都通過了考試。
+[Excessive] use of smartphones can harm your eyes.|過度使用手機會傷害眼睛。
+The magazine got an [exclusive] interview with the movie star.|這家雜誌取得與電影明星的獨家專訪。
+The museum will [exhibit] works by young local artists.|博物館將展出本地年輕藝術家的作品。
+The movie did not live up to my [expectations].|這部電影沒有達到我的期望。
+The teacher gave a clear [explanation] of the grammar rule.|老師清楚解釋了這條文法規則。
+The new school has excellent sports [facilities].|新學校有很棒的運動設施。
+Hard work is a key [factor] in success.|努力是成功的關鍵因素。
+The colors of the old photo have [faded].|舊照片的顏色已經褪了。
+Dogs are known as [faithful] companions.|狗以忠實的夥伴著稱。
+Are you [familiar] with this area?|你熟悉這一帶嗎？
+Wide-leg pants are back in [fashion] this year.|寬褲今年又流行回來了。
+The warm weather provides [favorable] conditions for growing rice.|溫暖的天氣為種稻提供有利條件。
+The [fertile] land along the river is perfect for farming.|河邊肥沃的土地很適合耕種。
+Every plan has its [flaws].|每個計畫都有缺點。
+Wood [floats] on water, but stone sinks.|木頭會浮在水上，石頭會沉。
+Plants [flourish] in warm, wet weather.|植物在溫暖潮濕的天氣中生長茂盛。
+Please handle the box carefully because it is [fragile].|請小心搬運這箱子，它是易碎品。
+He finally [fulfilled] his dream of becoming a pilot.|他終於實現了成為飛行員的夢想。
+The two ideas are [fundamentally] different.|這兩種想法根本上不同。
+My mom was [furious] when I came home after midnight.|我過了午夜才回家，媽媽非常生氣。
+Thanks to the [generosity] of donors, the library was rebuilt.|多虧捐款人的慷慨，圖書館得以重建。
+She was [genuinely] happy to see her old friends again.|她再見到老朋友時是真心開心。
+Sending flowers is a kind [gesture] to show you care.|送花是表達關心的貼心舉動。
+A [gigantic] wave hit the small fishing boat.|一道巨浪打向小漁船。
+Fans waited for hours to catch a [glimpse] of the singer.|歌迷等了數小時只為瞥見歌手一眼。
+Ignoring the warning was a [grave] mistake.|忽視警告是個嚴重的錯誤。
+I felt [guilty] about forgetting my mother's birthday.|我忘了媽媽生日，感到很內疚。
+The train came to a sudden [halt] after the earthquake.|地震後火車突然停了下來。
+The family faced great [hardship] after the earthquake.|地震後這家人面臨極大困境。
+People of different cultures live in [harmony] in this city.|不同文化的人在這座城市和睦共處。
+Few plants can survive the [harsh] conditions of the desert.|很少植物能在沙漠的嚴酷環境中存活。
+The high [humidity] in summer makes Taipei feel hotter.|夏天的高濕度讓台北感覺更熱。
+The two paintings look [identical], but one is a copy.|這兩幅畫看起來一模一樣，但其中一幅是複製品。
+The first step in solving a problem is to [identify] what it really is.|解決問題的第一步是確認問題究竟是什麼。
+Students face [immense] pressure before the GSAT.|學生在學測前承受巨大壓力。
+His silence [implied] that he did not agree.|他的沉默暗示他並不同意。
+The government [imposed] a tax on sugary drinks.|政府對含糖飲料課稅。
+I was [impressed] by her excellent English.|她優秀的英文讓我印象深刻。
+Cheap products are often [inferior] in quality.|便宜的產品品質常常較差。
+The project is still in its [initial] stage.|這項計畫仍在初期階段。
+[Initially], I didn't like the city, but now I love it.|起初我不喜歡這座城市，但現在很愛。
+My father [insisted] on driving me to school.|爸爸堅持要開車送我上學。
+Nature is a great source of [inspiration] for artists.|大自然是藝術家重要的靈感來源。
+The video became an [instant] hit online.|這支影片在網路上立刻爆紅。
+The swimming [instructor] taught us how to float.|游泳教練教我們如何漂浮。
+Can you play any musical [instruments]?|你會演奏任何樂器嗎？
+Taiwan's national health [insurance] covers almost everyone.|台灣的全民健保幾乎涵蓋所有人。
+Voters want leaders with honesty and [integrity].|選民希望領袖誠實正直。
+Online games cannot replace face-to-face [interaction].|線上遊戲無法取代面對面的互動。
+Only a few [intimate] friends were invited to the wedding.|只有幾位親密好友受邀參加婚禮。
+The job [involves] traveling to different countries.|這份工作需要到不同國家出差。
+Taipei 101 is the most famous [landmark] in Taiwan.|台北101是台灣最著名的地標。
+Every method has its [limitations].|每種方法都有其限制。
+From the top of Yushan, you can enjoy a [magnificent] view.|從玉山頂可以欣賞壯麗的景色。
+The [majestic] Taroko Gorge attracts visitors from all over the world.|雄偉的太魯閣峽谷吸引世界各地的遊客。
+Read the [manual] before using the new machine.|使用新機器前請先閱讀手冊。
+The [manufacturer] recalled thousands of faulty phones.|製造商召回數千支有瑕疵的手機。
+Our team won the game by a narrow [margin].|我們隊以些微差距贏得比賽。
+She is very [mature] for her age.|以她的年紀來說她非常成熟。
+Scientists still don't fully understand the [mechanism] of memory.|科學家仍未完全了解記憶的機制。
+It was [merely] a joke; don't take it seriously.|那只是個玩笑，別當真。
+Graduating from high school is a [milestone] in life.|高中畢業是人生的里程碑。
+The storm caused only [minimal] damage to the town.|暴風雨只對小鎮造成輕微損害。
+[Moderate] exercise, such as walking, is good for older people.|散步等適度運動對長者有益。
+Despite his success, he remains [modest].|儘管成功，他依然謙虛。
+Nurses [monitor] patients' heart rates around the clock.|護理師全天候監測病人的心跳。
+The [monument] was built to honor soldiers who died in the war.|這座紀念碑是為紀念戰死的士兵而建。
+This test has twenty [multiple]-choice questions.|這份考試有二十題選擇題。
+English is not her [native] language, but she speaks it fluently.|英文不是她的母語，但她說得很流利。
+For many people, a smartphone has become a [necessity].|對許多人來說，手機已成為必需品。
+There has been a [noticeable] improvement in her writing.|她的寫作有明顯的進步。
+Does anyone have any [objection] to the plan?|有人反對這個計畫嗎？
+A good reporter should stay [objective] when writing the news.|好記者寫新聞時應保持客觀。
+It was [obvious] from her smile that she had passed the exam.|從她的笑容就明顯看出她考過了。
+We have [occasional] showers in winter.|冬天偶爾會下陣雨。
+His jokes were [offensive] to many people.|他的笑話冒犯了許多人。
+Many residents [oppose] the plan to build a factory nearby.|許多居民反對在附近蓋工廠的計畫。
+We had no [option] but to cancel the trip.|我們別無選擇只能取消旅行。
+This is a copy; the [original] painting is in the museum.|這是複製品，原畫在博物館裡。
+No one could predict the [outcome] of the election.|沒有人能預測選舉的結果。
+It's easy to [overlook] small mistakes when you are tired.|累的時候很容易忽略小錯誤。
+She has a great [passion] for music.|她對音樂充滿熱情。
+There is a heavy [penalty] for drunk driving.|酒駕會受到重罰。
+A large [percentage] of students use smartphones every day.|很高比例的學生每天使用手機。
+The band will [perform] on stage at the concert tonight.|樂團今晚將在演唱會上台表演。
+The movie has a simple [plot] but great acting.|這部電影情節簡單但演技很好。
+The [politician] promised to build more parks.|那位政治人物承諾興建更多公園。
+She [possesses] a rare talent for languages.|她擁有罕見的語言天分。
+Driving while tired is [potentially] dangerous.|疲勞駕駛可能很危險。
+The teacher [praised] the students for their hard work.|老師稱讚學生的努力。
+The train left at [precisely] 7:15.|火車在七點十五分準時開出。
+Scientists cannot yet [predict] exactly when an earthquake will happen.|科學家仍無法準確預測地震何時發生。
+Your [presence] at the meeting is required.|你必須出席會議。
+Honesty is one of the most important [principles] in life.|誠實是人生最重要的原則之一。
+Posting photos of others without asking may invade their [privacy].|未經同意張貼他人照片可能侵犯隱私。
+The small bakery made a large [profit] during the holiday season.|這家小麵包店在假期期間獲得可觀利潤。
+He is one of the most [promising] young players in the league.|他是聯盟中最有潛力的年輕球員之一。
+You need [proof] of identity to open a bank account.|開銀行帳戶需要身分證明。
+The [provision] of clean water is a basic public service.|提供乾淨的水是基本公共服務。
+You can [purchase] tickets online or at the station.|你可以在網路上或車站購買車票。
+After graduation, she went to Japan to [pursue] a career in design.|畢業後她到日本追求設計職涯。
+Humans have always been on a [quest] for knowledge.|人類一直在追求知識。
+Five students were [randomly] chosen to answer the survey.|隨機選出五位學生填問卷。
+The black bear is now [rare] in the wild.|黑熊現在在野外很罕見。
+Information is [readily] available on the Internet.|網路上很容易取得資訊。
+Set [realistic] goals that you can actually reach.|設定你能真正達成的實際目標。
+The food at this restaurant is good, and the prices are [reasonable].|這家餐廳東西好吃，價格也合理。
+I can't [recall] where I put my keys.|我想不起把鑰匙放在哪裡了。
+It took him three months to fully [recover] from the surgery.|他花了三個月才從手術中完全康復。
+Take some time to [reflect] on what you have learned.|花點時間反思你學到了什麼。
+Millions of [refugees] fled the country during the war.|戰爭期間數百萬難民逃離該國。
+You must [register] for the course before Friday.|你必須在週五前登記選課。
+Practice helps [reinforce] what you learn in class.|練習有助鞏固課堂所學。
+She has a close [relationship] with her grandmother.|她和奶奶關係很親密。
+Make sure you get news from [reliable] sources.|務必從可靠來源取得新聞。
+The patient made a [remarkable] recovery after the surgery.|病人手術後恢復得非常好。
+Ginger tea is a popular home [remedy] for colds.|薑茶是常見的感冒偏方。
+You must meet all the [requirements] to get the scholarship.|你必須符合所有條件才能獲得獎學金。
+Water is a precious natural [resource] that we must not waste.|水是我們不可浪費的珍貴自然資源。
+The city placed [restrictions] on car use in the old town.|市政府限制車輛進入舊城區。
+Classes will [resume] after the typhoon passes.|颱風過後將恢復上課。
+The survey [revealed] that most students sleep less than seven hours a night.|調查揭露多數學生每晚睡不到七小時。
+The smartphone was a [revolutionary] invention.|智慧型手機是革命性的發明。
+A [reward] was offered for finding the lost dog.|有人懸賞尋找走失的狗。
+Investing all your money in one stock is [risky].|把所有錢投資在一支股票上很有風險。
+This app shows you the fastest [route] to school.|這個 App 會告訴你上學最快的路線。
+Exercise is part of my daily [routine].|運動是我每天的例行公事。
+The heavy rain [ruined] our picnic.|大雨毀了我們的野餐。
+Toys were [scattered] all over the floor.|玩具散落滿地。
+A bronze [sculpture] of the artist stands in the park.|公園裡立著一座該藝術家的銅像雕塑。
+Mangoes are a [seasonal] fruit available in summer.|芒果是夏季的季節性水果。
+The young singer became an overnight [sensation].|那位年輕歌手一夜爆紅。
+The glass fell and [shattered] into pieces.|玻璃掉下來摔成碎片。
+Do you have any [siblings]?|你有兄弟姊妹嗎？
+There is no phone [signal] in the mountains.|山上沒有手機訊號。
+I have a [slight] headache, but I can still go to school.|我有點頭痛，但還是能上學。
+Be careful—the floor is [slippery] after the rain.|小心，下雨後地板很滑。
+Ice is water in [solid] form.|冰是固態的水。
+I bought some pineapple cakes as [souvenirs] for my friends.|我買了些鳳梨酥當作送朋友的紀念品。
+What do you like to do in your [spare] time?|你空閒時喜歡做什麼？
+For many people, religion gives [spiritual] support.|對許多人來說，宗教提供心靈支持。
+Working under constant [stress] can harm your health.|長期在壓力下工作會傷害健康。
+My brother is too [stubborn] to admit he is wrong.|我哥太固執了，不肯承認自己錯了。
+She [stumbled] over a rock and hurt her ankle.|她被石頭絆倒，扭傷了腳踝。
+Camels can [survive] for days in the desert without drinking water.|駱駝能在沙漠中不喝水存活好幾天。
+Call the police if you see anything [suspicious].|如果看到可疑的事情請報警。
+The government made a [swift] response to the disaster.|政府對災難迅速做出回應。
+Wash the vegetables [thoroughly] before cooking.|烹煮前要把蔬菜徹底洗乾淨。
+The old factory was [transformed] into a creative park.|舊工廠被改造成文創園區。
+Public [transport] in Taipei is cheap and convenient.|台北的大眾運輸便宜又方便。
+There is a growing [trend] toward working from home.|在家工作的趨勢日益增長。
+The [ultimate] goal of education is to help students think for themselves.|教育的最終目標是幫助學生獨立思考。
+She is [undoubtedly] the best player on the team.|她無疑是隊上最好的球員。
+Doctors [urge] people to get vaccinated before winter.|醫生呼籲民眾在冬天前接種疫苗。
+The hotel has no [vacancies] during the holidays.|假期期間飯店客滿。
+The magician made the rabbit [vanish].|魔術師讓兔子消失了。
+Children should not watch too many [violent] movies.|孩子不應看太多暴力電影。
+On a clear day, the mountains are [visible] from Taipei 101.|天氣晴朗時，從台北101看得到群山。
+I still [vividly] remember my first day at school.|我仍清楚記得上學的第一天。
+We [wandered] around the old streets of Tainan all afternoon.|我們整個下午在台南老街閒逛。
+The new library is [accessible] to wheelchair users.|新圖書館方便輪椅使用者進出。
+We [accomplished] the task in less than an hour.|我們不到一小時就完成了任務。
+Dust [accumulates] quickly if you don't clean your room.|不打掃房間的話灰塵很快就會累積。
+[Admission] to the museum is free on Sundays.|博物館週日免費入場。
+Rapid [advancements] in AI are changing the job market.|人工智慧的快速進步正在改變就業市場。
+Young people want more [affordable] housing in big cities.|年輕人希望大城市有更多負擔得起的住宅。
+The city has an [ambitious] plan to plant one million trees.|這座城市有種一百萬棵樹的遠大計畫。
+You will have [ample] time to finish the test.|你會有充足的時間完成考試。
+Many students feel [anxiety] before an important exam.|許多學生在重要考試前感到焦慮。
+The trip takes [approximately] three hours by train.|搭火車大約要三小時。
+Taipei 101 is a famous example of modern [architecture].|台北101是現代建築的著名例子。
+The job offer was very [attractive], so she accepted it.|這份工作條件很吸引人，所以她接受了。
+The campaign aims to raise [awareness] of ocean pollution.|這項活動旨在提高大眾對海洋汙染的意識。
+The festival [boosted] the local economy.|這個節慶帶動了當地經濟。
+Scientists made a major [breakthrough] in cancer research.|科學家在癌症研究上有重大突破。
+Modern phones have amazing camera [capabilities].|現代手機有驚人的拍照能力。
+Parents attended the graduation [ceremony] with flowers.|家長帶著花出席畢業典禮。
+Learning a new language is a big [challenge].|學一門新語言是很大的挑戰。
+The Maya built an advanced [civilization] in Central America.|馬雅人在中美洲建立了先進的文明。
+E-[commerce] has changed the way people shop.|電子商務改變了人們購物的方式。
+There is fierce [competition] for places at top universities.|頂尖大學的名額競爭激烈。
+The [complexity] of the problem surprised everyone.|問題的複雜程度讓大家吃驚。
+I can't [concentrate] on my homework with the TV on.|電視開著我無法專心寫作業。
+The team [consists] of five members.|這個團隊由五名成員組成。
+The new MRT line is still under [construction].|新捷運線仍在興建中。
+Air conditioners [consume] a large amount of electricity in summer.|冷氣在夏天消耗大量電力。
+The singer signed a [contract] with a new company.|歌手和新公司簽了約。
+Please reply at your earliest [convenience].|請您方便時盡早回覆。
+Exercise helps me [cope] with stress.|運動幫助我應付壓力。
+It takes [courage] to admit your mistakes.|承認錯誤需要勇氣。
+Film [critics] praised the movie for its beautiful music.|影評人稱讚這部電影的音樂優美。
+Sleep is [critical] for good health.|睡眠對健康至關重要。
+The next few hours are [crucial] for the patient.|接下來幾小時對病人至關重要。
+She is a [dedicated] teacher who cares about every student.|她是關心每位學生的敬業老師。
+The painting [depicts] a busy market in old Taipei.|這幅畫描繪了舊台北熱鬧的市場。
+Many English words are [derived] from Latin.|許多英文字源自拉丁文。
+Taiwan has become a popular tourist [destination].|台灣已成為熱門觀光目的地。
+Dogs can [detect] smells that humans cannot notice at all.|狗能察覺人類完全注意不到的氣味。
+The town was [devastated] by the earthquake.|小鎮被地震摧毀。
+Smartwatches and other wearable [devices] can track your heart rate.|智慧手錶等穿戴裝置能追蹤心率。
+It is important to make a [distinction] between facts and opinions.|區分事實與意見很重要。
+It is hard to [distinguish] one twin from the other.|很難分辨這對雙胞胎誰是誰。
+Taipei is a [dynamic] city that never sleeps.|台北是一座充滿活力的不夜城。
+Coral reefs are one of the richest [ecosystems] on Earth.|珊瑚礁是地球上最豐富的生態系之一。
+New machines have greatly improved the factory's [efficiency].|新機器大大提升了工廠的效率。
+The [emergence] of smartphones changed our daily lives.|智慧型手機的出現改變了我們的日常生活。
+In an [emergency], call 119.|緊急時請撥119。
+Good doctors show [empathy] for their patients' feelings.|好醫生能對病人的感受展現同理心。
+Travelers may [encounter] language problems in a foreign country.|旅人在國外可能遇到語言問題。
+My brother works as a software [engineer] in Hsinchu.|我哥在新竹當軟體工程師。
+Reading books can [enrich] your life.|閱讀能豐富你的生活。
+The students were [enthusiastic] about the school trip.|學生們對校外教學充滿熱情。
+There is no scientific [evidence] that the herb can cure cancer.|沒有科學證據顯示這種草藥能治癌症。
+The doctor [examined] my throat and said it was a cold.|醫生檢查我的喉嚨說是感冒。
+She [excels] at math and science.|她擅長數學和自然科學。
+The art [exhibition] will be open to the public until December.|這場藝術展覽將開放到十二月。
+Space [exploration] helps us understand the universe.|太空探索幫助我們了解宇宙。
+Too much [exposure] to the sun can damage your skin.|過度曝曬會傷害皮膚。
+The library has an [extensive] collection of old maps.|圖書館收藏大量古地圖。
+The new phone's best [feature] is its long battery life.|新手機最好的特色是電池續航力長。
+Burning [fossil] fuels causes air pollution.|燃燒化石燃料會造成空氣汙染。
+Education is a [fundamental] right for every child.|教育是每個孩子的基本權利。
+[Global] warming is causing sea levels to rise.|全球暖化正導致海平面上升。
+The [government] plans to build more public housing.|政府計畫興建更多社會住宅。
+Cutting down forests destroys the natural [habitat] of many animals.|砍伐森林會摧毀許多動物的自然棲息地。
+[Hazardous] waste must be handled with great care.|有害廢棄物必須非常小心處理。
+The old street is an important part of the town's cultural [heritage].|這條老街是小鎮文化遺產的重要部分。
+Heavy snow [hindered] the rescue work.|大雪妨礙了救援工作。
+Children have a wonderful [imagination].|孩子有奇妙的想像力。
+The school will [implement] the new rules next semester.|學校下學期將實施新規定。
+Living alone taught me [independence].|獨自生活讓我學會獨立。
+Every [individual] has the right to free speech.|每個人都有言論自由的權利。
+The [Industrial] Revolution began in Britain in the 18th century.|工業革命於十八世紀在英國開始。
+Rapid growth [inevitably] brings some problems.|快速成長不可避免會帶來一些問題。
+Wash your hands often to lower the risk of [infection].|經常洗手以降低感染風險。
+She took the [initiative] to clean up the beach.|她主動發起淨灘。
+The player missed the game because of a knee [injury].|這名球員因膝傷缺席比賽。
+Universities are important [institutions] for research.|大學是重要的研究機構。
+Emotional [intelligence] is just as important as IQ.|情緒智商和智商一樣重要。
+The [landscape] of the east coast is breathtaking.|東海岸的景色令人屏息。
+The [legendary] singer is still loved by millions.|那位傳奇歌手至今仍受數百萬人喜愛。
+Wearing a helmet is [mandatory] for scooter riders.|騎機車必須戴安全帽。
+Plastic waste is harmful to [marine] life.|塑膠垃圾對海洋生物有害。
+You need a [minimum] of 60 points to pass.|你至少要六十分才能及格。
+The workers [negotiated] with the company for higher pay.|工人和公司協商加薪。
+A referee must stay [neutral] during the game.|裁判在比賽中必須保持中立。
+Please write your name and [occupation] on the form.|請在表格上寫下姓名和職業。
+The students [organized] a charity concert.|學生籌辦了一場慈善音樂會。
+There was an [outbreak] of dengue fever in southern Taiwan.|南台灣爆發登革熱疫情。
+Some people [perceive] failure as a chance to learn.|有些人把失敗視為學習的機會。
+After two years, she finally got a [permanent] job.|兩年後她終於找到正職工作。
+Smoking is not [permitted] in this building.|這棟大樓禁止吸菸。
+With [perseverance], she finally passed the exam.|憑著毅力，她終於通過考試。
+The northern lights are a natural [phenomenon] that attracts many tourists.|北極光是吸引許多遊客的自然現象。
+Japan has an aging [population] and a low birth rate.|日本人口老化且出生率低。
+Take [precautions] against the typhoon, such as storing water.|做好颱風預防措施，例如儲水。
+Wearing a helmet can [prevent] serious head injuries.|戴安全帽能預防嚴重的頭部傷害。
+He is a [prominent] scientist in the field of AI.|他是人工智慧領域的知名科學家。
+The city council rejected the [proposal] to build a new mall.|市議會否決了興建新商場的提案。
+Tainan was once the most [prosperous] city in Taiwan.|台南曾是台灣最繁榮的城市。
+Her work finally received international [recognition].|她的作品終於獲得國際認可。
+He was [reluctant] to admit that he had made a mistake.|他不願承認自己犯了錯。
+Wind and solar power are [renewable] energy sources.|風力和太陽能是可再生能源。
+She will [represent] Taiwan at the Olympics.|她將代表台灣參加奧運。
+The girl closely [resembles] her mother.|女孩長得很像她媽媽。
+Local [residents] complained about the noise from the airport.|當地居民抱怨機場的噪音。
+I couldn't [resist] the smell of fresh bread.|我抵擋不了新鮮麵包的香味。
+Parents are [responsible] for their children's safety.|父母要為孩子的安全負責。
+It took two days to [restore] power after the typhoon.|颱風過後花了兩天才恢復供電。
+Tourism brings in a lot of [revenue] for the city.|觀光為這座城市帶來大量收入。
+The mountain is a [sacred] place for the local tribe.|這座山是當地部落的聖地。
+Airport [security] checks every passenger's bag.|機場安檢會檢查每位乘客的行李。
+My skin is very [sensitive] to sunlight.|我的皮膚對陽光很敏感。
+Doctors are studying the [severity] of the new virus.|醫生正在研究新病毒的嚴重程度。
+Can you give me a more [specific] example?|你能給我一個更具體的例子嗎？
+Making a study plan is a useful [strategy] for preparing for exams.|制定讀書計畫是準備考試的有效策略。
+The old wooden [structure] was damaged in the fire.|那棟老木造建築在火災中受損。
+He was injured and [subsequently] missed the rest of the season.|他受傷了，隨後缺席整個球季剩下的比賽。
+Some cleaning products contain harmful [substances] that can damage your skin.|有些清潔用品含有會傷害皮膚的有害物質。
+Without [sufficient] sleep, it is hard to concentrate in class.|睡眠不足就很難在課堂上專心。
+She tried to [suppress] her laughter during the meeting.|她在會議中努力忍住笑。
+A [survey] found that most people want more parks.|一項調查發現多數人希望有更多公園。
+The MRT service was [suspended] during the earthquake.|地震期間捷運暫停營運。
+A high fever and a sore throat are common [symptoms] of the flu.|高燒和喉嚨痛是流感的常見症狀。
+Modern [technology] makes it easy to talk to friends abroad.|現代科技讓和國外朋友聊天變得容易。
+Lions mark their [territory] to keep other animals away.|獅子標記地盤讓其他動物遠離。
+The plan sounds good in [theory], but it may not work in practice.|這計畫理論上聽起來不錯，但實際上可能行不通。
+Some plants are [toxic] to cats and dogs.|有些植物對貓狗有毒。
+Eating rice dumplings during the Dragon Boat Festival is a Chinese [tradition].|端午節吃粽子是華人傳統。
+The government should be more [transparent] about how it spends money.|政府應更透明地公開經費使用。
+Pollen can [trigger] sneezing in some people.|花粉會引發某些人打噴嚏。
+Music is often called a [universal] language.|音樂常被稱為世界共通的語言。
+We should [utilize] solar energy more effectively.|我們應更有效地利用太陽能。
+There is a large [variation] in temperature between day and night in the desert.|沙漠中日夜溫差很大。
+Solar power is now a [viable] alternative to coal.|太陽能現在是取代燃煤的可行選擇。
+The night market is [vibrant] and full of energy.|夜市熱鬧又充滿活力。
+Water plays a [vital] role in keeping our bodies healthy.|水在維持身體健康上扮演極重要的角色。`.split("\n");
+const W=RAW.split("\n").map((l,i)=>{const[en,pos,zh,col,t,y]=l.split("|");const[s,sz]=SENT[i].split("|");return{i,n:i+1,en,pos,zh,col,s,sz,t:+t,y:y.split(","),p:pos.split(/[.\/]/)[0]}});
+const yrs=w=>w.y.join("·");
+const today=new Date().toLocaleDateString("sv");
+const KEY="gsat500-"+today;
+let known=new Set();
+try{known=new Set(JSON.parse(localStorage.getItem(KEY)||"[]"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify([...known]))}catch(e){}};
+const WKEY="gsat500-wrong";
+let wrong=new Set();
+try{wrong=new Set(JSON.parse(localStorage.getItem(WKEY)||"[]"))}catch(e){}
+const saveW=()=>{try{localStorage.setItem(WKEY,JSON.stringify([...wrong]))}catch(e){}};
+let qz={dir:"e2c",wrongOnly:false,cur:null,opts:[],done:false,c:0,t:0,last:-1};
+let st={theme:-1,mode:"sent",hideZh:false,unk:false,shuf:false,fi:0,flip:false};
+let order=W.map(w=>w.i);
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function say(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="en-US";speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function view(){return order.map(i=>W[i]).filter(w=>(st.theme<0||w.t===st.theme)&&(!st.unk||!known.has(w.i)))}
+function prog(){const k=known.size;$("pt").textContent=`今日已熟 ${k} / ${W.length}`;$("pb").style.width=(k/W.length*100)+"%"}
+function themes(){
+  const el=$("themes");el.innerHTML="";
+  [[-1,"🗂","全部 "+W.length]].concat(THEMES.map((t,i)=>[i,t[0],t[1]])).forEach(([i,e,l])=>{
+    const b=document.createElement("button");b.id="th"+i;
+    const cnt=i<0?known.size:W.filter(w=>w.t===i&&known.has(w.i)).length;
+    const tot=i<0?W.length:W.filter(w=>w.t===i).length;
+    b.textContent=`${e} ${l}${i<0?"":" "+cnt+"/"+tot}`;
+    if(st.theme===i)b.className="on";
+    b.onclick=()=>{st.theme=i;st.fi=0;st.flip=false;render()};el.appendChild(b)});
+}
+function list(){
+  const v=view(),el=$("list");
+  el.classList.toggle("hidezh",st.hideZh);
+  if(!v.length){el.innerHTML='<div class="empty">🎉 這個範圍今天都熟了</div>';return}
+  el.innerHTML=v.map(w=>`<div class="w${known.has(w.i)?" known":""}" data-i="${w.i}">
+    <div class="top"><span class="num">${String(w.n).padStart(3,"0")}</span><span class="en">${esc(w.en)}</span><span class="pos">${w.pos}</span></div>
+    <div class="zh">${esc(w.zh)}</div><div class="col">${esc(w.col)}</div><div class="yr">📅 ${yrs(w)}</div>
+    <div class="acts"><button class="k">${known.has(w.i)?"✅ 熟":"☐ 熟"}</button><button class="s">🔊</button>${st.hideZh?'<button class="p">👁</button>':""}</div></div>`).join("");
+}
+$("list").addEventListener("click",e=>{
+  const c=e.target.closest(".w");if(!c)return;const i=+c.dataset.i;
+  if(e.target.closest(".k")){known.has(i)?known.delete(i):known.add(i);save();render()}
+  else if(e.target.closest(".s"))say(W[i].en);
+  else if(e.target.closest(".p"))c.classList.toggle("peek");
+});
+function flash(){
+  const v=view(),fc=$("fc");
+  if(!v.length){fc.innerHTML='<div class="empty">🎉 這個範圍今天都熟了</div>';return}
+  st.fi=Math.min(st.fi,v.length-1);const w=v[st.fi];
+  fc.innerHTML=`<div class="meta">${THEMES[w.t][0]} ${THEMES[w.t][1]} · 📅 ${yrs(w)} · ${st.fi+1} / ${v.length}</div>
+    <div class="en">${esc(w.en)}</div><div class="pos">${w.pos}</div>
+    ${st.flip?`<div class="zh">${esc(w.zh)}</div><div class="col">${esc(w.col)}</div>`:'<div class="meta">點一下看中文</div>'}`;
+  $("fKnow").textContent=known.has(w.i)?"✅ 已熟（取消）":"✅ 熟了";
+}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function qPool(){return qz.wrongOnly?view().filter(w=>wrong.has(w.i)):view()}
+function newQ(){
+  const pool=qPool();
+  if(!pool.length){qz.cur=null;return}
+  let w=pick(pool);if(pool.length>1)while(w.i===qz.last)w=pick(pool);
+  qz.cur=w;qz.last=w.i;qz.done=false;
+  let ds;
+  if(st.mode==="sent"){
+    const sameP=x=>x.i!==w.i&&x.p===w.p;
+    ds=shuffle(W.filter(x=>sameP(x)&&x.t===w.t)).slice(0,3);
+    if(ds.length<3)ds=ds.concat(shuffle(W.filter(x=>sameP(x)&&!ds.includes(x))).slice(0,3-ds.length));
+  }else ds=shuffle(W.filter(x=>x.t===w.t&&x.i!==w.i&&x.zh!==w.zh)).slice(0,3);
+  while(ds.length<3){const x=pick(W);if(x.i!==w.i&&!ds.includes(x))ds.push(x)}
+  qz.opts=shuffle([w,...ds]);
+}
+function quiz(){
+  const pct=qz.t?Math.round(qz.c/qz.t*100):0;
+  $("qstat").innerHTML=`<span>答對 <b>${qz.c}</b> / ${qz.t}</span><span>正確率 <b>${pct}%</b></span><span>❌ 錯題本 <b>${wrong.size}</b></span>`;
+  const w=qz.cur,qq=$("qq"),qo=$("qo"),fb=$("qfb");
+  if(!w){
+    qq.innerHTML=`<div class="empty">${qz.wrongOnly?"🎉 錯題都清完了":"這個範圍沒有可出的題目"}</div>`;
+    qo.innerHTML="";fb.hidden=true;$("qNext").hidden=true;return}
+  $("qNext").hidden=false;
+  const sent=st.mode==="sent",e2c=!sent&&qz.dir==="e2c";
+  const filled=esc(w.s).replace(/\[(.+?)\]/,(m,a)=>qz.done?`<u class="ans">${a}</u>`:"<span class=\"blank\">　　　　</span>");
+  qq.innerHTML=`<div class="meta">${THEMES[w.t][0]} ${THEMES[w.t][1]} · 📅 ${yrs(w)} · ${sent?"選出最適合填入空格的字（選項為原形）":e2c?"選出正確中文":"選出正確英文"}</div>`+
+    (sent?`<div class="sent">${filled}</div>${qz.done?`<div class="meta">${esc(w.sz)}</div>`:""}`
+     :e2c?`<div class="en">${esc(w.en)}</div><div class="pos">${w.pos}</div>`:`<div class="zh">${esc(w.zh)}</div><div class="pos">${w.pos}</div>`);
+  qo.className="opts"+(e2c?"":" e");
+  qo.innerHTML=qz.opts.map((o,k)=>{
+    let cls="";if(qz.done){if(o.i===w.i)cls="right";else if(o.i===qz.sel)cls="wrong"}
+    return `<button data-k="${k}" class="${cls}" ${qz.done?"disabled":""}><span class="key">${k+1}</span><span class="t">${esc(e2c?o.zh:o.en)}</span></button>`}).join("");
+  if(qz.done){
+    const ok=qz.sel===w.i;
+    fb.hidden=false;
+    fb.innerHTML=`${ok?"✅ 答對了":"❌ 答錯了"}　<b class="en" style="font-size:1rem">${esc(w.en)}</b> <span class="pos">${w.pos}</span> ${esc(w.zh)}<span class="col">${esc(w.col)}</span>`;
+  }else fb.hidden=true;
+}
+function answer(k){
+  if(qz.done||!qz.cur)return;
+  const o=qz.opts[k];if(!o)return;
+  qz.sel=o.i;qz.done=true;qz.t++;
+  if(o.i===qz.cur.i){qz.c++;known.add(o.i);if(qz.wrongOnly)wrong.delete(o.i)}
+  else{wrong.add(qz.cur.i);known.delete(qz.cur.i)}
+  save();saveW();say(qz.cur.en);themes();prog();quiz();
+}
+$("qo").addEventListener("click",e=>{const b=e.target.closest("button");if(b)answer(+b.dataset.k)});
+$("qNext").onclick=()=>{newQ();quiz()};
+$("qRe").onclick=()=>{qz.c=0;qz.t=0;newQ();quiz()};
+$("qDir").onclick=()=>{qz.dir=qz.dir==="e2c"?"c2e":"e2c";qz.done=false;render()};
+$("qWrong").onclick=()=>{qz.wrongOnly=!qz.wrongOnly;newQ();render()};
+document.addEventListener("keydown",e=>{
+  if(st.mode!=="quiz"&&st.mode!=="sent")return;
+  if(/^[1-4]$/.test(e.key))answer(+e.key-1);
+  else if(e.key==="Enter"&&qz.done&&e.target.tagName!=="BUTTON"){newQ();quiz()}
+});
+function render(){
+  themes();prog();
+  const isQ=st.mode==="quiz"||st.mode==="sent";
+  $("mQuiz").className=st.mode==="quiz"?"on":"";$("mSent").className=st.mode==="sent"?"on":"";
+  $("mList").className=st.mode==="list"?"on":"";$("mFlash").className=st.mode==="flash"?"on":"";
+  $("tZh").className=st.hideZh?"on":"";$("tUnk").className=st.unk?"on":"";$("tShuf").className=st.shuf?"on":"";
+  $("qDir").textContent=qz.dir==="e2c"?"🔁 英→中":"🔁 中→英";
+  $("qWrong").className=qz.wrongOnly?"on":"";
+  $("tZh").hidden=st.mode!=="list";$("tShuf").hidden=isQ;
+  $("qDir").hidden=st.mode!=="quiz";$("qWrong").hidden=!isQ;
+  $("list").hidden=st.mode!=="list";$("flash").hidden=st.mode!=="flash";$("quiz").hidden=!isQ;
+  if(isQ){if(!qz.cur||!qPool().some(w=>w.i===qz.cur.i)&&!qz.done)newQ();quiz()}
+  else st.mode==="list"?list():flash();
+}
+$("mQuiz").onclick=()=>{if(st.mode!=="quiz"){st.mode="quiz";newQ()}render()};
+$("mSent").onclick=()=>{if(st.mode!=="sent"){st.mode="sent";newQ()}render()};
+const step=d=>{const n=view().length;if(!n)return;st.fi=(st.fi+d+n)%n;st.flip=false;flash()};
+$("mList").onclick=()=>{st.mode="list";render()};
+$("mFlash").onclick=()=>{st.mode="flash";st.fi=0;st.flip=false;render()};
+$("tZh").onclick=()=>{st.hideZh=!st.hideZh;render()};
+$("tUnk").onclick=()=>{st.unk=!st.unk;st.fi=0;render()};
+$("tShuf").onclick=()=>{st.shuf=!st.shuf;order=W.map(w=>w.i);if(st.shuf)for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}st.fi=0;render()};
+$("reset").onclick=()=>{known.clear();save();render()};
+$("fc").onclick=()=>{st.flip=!st.flip;flash();if(st.flip){const v=view();if(v[st.fi])say(v[st.fi].en)}};
+$("fc").onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();$("fc").click()}};
+$("fPrev").onclick=()=>step(-1);$("fNext").onclick=()=>step(1);
+$("fKnow").onclick=()=>{const v=view(),w=v[st.fi];if(!w)return;
+  if(known.has(w.i))known.delete(w.i);else{known.add(w.i);if(!st.unk)st.fi=(st.fi+1)%v.length}
+  save();themes();prog();flash()};
+document.addEventListener("keydown",e=>{if(st.mode!=="flash"||e.target.tagName==="BUTTON")return;if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1)});
+render();
+</script>
+
+<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+</body>
+</html>
